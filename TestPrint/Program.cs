@@ -13,24 +13,43 @@ namespace TestPrint
     {
         static void Main(string[] args)
         {
-            string s = "Esto es una prueba linea 1";
+            
+
+
+
+            //string s = "Esto es una prueba linea 1";          
             //s += "\n";
-            //s += "Ruben Dario Andrade Varela";
-            //s += "\n";
-            //s += "las amo mucho";            
-            s += "\n";
-            s += "Linea 2";
+            //s += "Linea 2";
            
 
-            PrintDocument p = new PrintDocument();
-            p.PrintPage += delegate (object sender1, PrintPageEventArgs e1)
-            {
-                e1.Graphics.DrawString(s, new Font("Times New Roman", 12), new SolidBrush(Color.Black), new RectangleF(0, 0, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
-
-            };
+            //PrintDocument p = new PrintDocument();
+            //p.PrintPage += delegate (object sender1, PrintPageEventArgs e1)
+            //{
+            //    e1.Graphics.DrawString(s, new Font("Times New Roman", 12), new SolidBrush(Color.Black), new RectangleF(0, 0, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
+            //};
             try
             {
-                p.Print();
+                //p.Print();
+                PrintDocument pd = new PrintDocument();
+                //pd.DefaultPageSettings.PrinterSettings.PrinterName = "Printer Name";
+                //pd.DefaultPageSettings.Landscape = true; //or false!
+                pd.PrintPage += (sender, args2) =>
+                {
+                    Image i = Image.FromFile(@"C:\Users\Ruben\Desktop\descarga.jpg");
+                    Rectangle m = args2.MarginBounds;
+
+                    if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
+                    {
+                        m.Height = (int)((double)i.Height / (double)i.Width * (double)m.Width);
+                    }
+                    else
+                    {
+                        m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
+                    }
+                    args2.Graphics.DrawImage(i, m);
+                };
+                pd.Print();
+
             }
             catch (Exception ex)
             {
