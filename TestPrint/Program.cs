@@ -13,10 +13,6 @@ namespace TestPrint
     {
         static void Main(string[] args)
         {
-            
-
-
-
             //string s = "Esto es una prueba linea 1";          
             //s += "\n";
             //s += "Linea 2";
@@ -35,7 +31,7 @@ namespace TestPrint
                 //pd.DefaultPageSettings.Landscape = true; //or false!
                 pd.PrintPage += (sender, args2) =>
                 {
-                    Image i = Image.FromFile(@"C:\Users\Ruben\Desktop\descarga.jpg");
+                    Image i = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg");
                     Rectangle m = args2.MarginBounds;
 
                     if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
@@ -47,7 +43,23 @@ namespace TestPrint
                         m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
                     }
                     args2.Graphics.DrawImage(i, m);
+
+                    SolidBrush Brush = new SolidBrush(Color.Black);
+
+                    //gets the text from the textbox
+                    string printText = "Alejandro Sierra";
+                    StringFormat sf = new StringFormat();
+                    sf.LineAlignment = StringAlignment.Center;
+                    sf.Alignment = StringAlignment.Center;
+                    printText += Environment.NewLine + System.DateTime.Today.ToShortDateString() + Environment.NewLine + Environment.NewLine 
+                    + "-------------------------------------------------------------------------------------------------" 
+                    + Environment.NewLine;
+
+                    //Makes the file to print and sets the look of it
+                    args2.Graphics.DrawString(printText, new Font("Arial", 9), Brush, 10, 50);
+                
                 };
+
                 pd.Print();
 
             }
