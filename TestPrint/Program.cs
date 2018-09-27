@@ -7,68 +7,108 @@ using System.Drawing;
 using System.Data;
 using System.Drawing.Printing;
 
+
 namespace TestPrint
 {
     class Program
     {
         static void Main(string[] args)
         {
+            Ticket ticket = new Ticket();
+
+            ticket.HeaderImage = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg"); //esta propiedad no es obligatoria
+
+            ticket.AddHeaderLine("SUPERMERCADO EL DORADO");
+            ticket.AddHeaderLine("NIT. 860.076.918-1");
+            ticket.AddHeaderLine("CRA 90 BIS # 76 - 51 AG2 LOCAL");
+            ticket.AddHeaderLine("TELEFONO: 478 01 98");
+            ticket.AddHeaderLine("REGIMEN ");
+
+            //El metodo AddSubHeaderLine es lo mismo al de AddHeaderLine con la diferencia
+            //de que al final de cada linea agrega una linea punteada "=========="
+            ticket.AddSubHeaderLine("Caja # 1 - Factura de Venta No. # 0001");
+            ticket.AddSubHeaderLine("Le atendió: Blanca");
+            ticket.AddSubHeaderLine("Fecha: " +DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+
+            //El metodo AddItem requeire 3 parametros, el primero es cantidad, el segundo es la descripcion
+            //del producto y el tercero es el precio
+            ticket.AddItem("1", "Leche Alqueria", "2.000");
+            ticket.AddItem("2", "Huevos", "600");
+
+            //El metodo AddTotal requiere 2 parametros, la descripcion del total, y el precio
+            ticket.AddTotal("SUBTOTAL", "2600");
+            ticket.AddTotal("IVA", "0");
+            ticket.AddTotal("TOTAL", "2600");
+            ticket.AddTotal("", ""); //Ponemos un total en blanco que sirve de espacio
+            ticket.AddTotal("EFECTIVO", "5.000");
+            ticket.AddTotal("CAMBIO", "2.400");
+            ticket.AddTotal("", "");// Ponemos un total en blanco que sirve de espacio
+            ticket.AddTotal("USTED AHORRO", "0.00");
+
+            //El metodo AddFooterLine funciona igual que la cabecera
+            ticket.AddFooterLine("Gracias, Thanks, Danke, Grazie,");
+            ticket.AddFooterLine("Merci, Obrigado!");
+            ticket.AddFooterLine("GRACIAS POR TU VISITA");
+
+            //Y por ultimo llamamos al metodo PrintTicket para imprimir el ticket, este metodo necesita un
+            //parametro de tipo string que debe de ser el nombre de la impresora.
+            ticket.PrintTicket("ONE 500");
             //string s = "Esto es una prueba linea 1";          
             //s += "\n";
             //s += "Linea 2";
-           
+
 
             //PrintDocument p = new PrintDocument();
             //p.PrintPage += delegate (object sender1, PrintPageEventArgs e1)
             //{
             //    e1.Graphics.DrawString(s, new Font("Times New Roman", 12), new SolidBrush(Color.Black), new RectangleF(0, 0, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
             //};
-            try
-            {
-                //p.Print();
-                PrintDocument pd = new PrintDocument();
-                //pd.DefaultPageSettings.PrinterSettings.PrinterName = "Printer Name";
-                //pd.DefaultPageSettings.Landscape = true; //or false!
-                pd.PrintPage += (sender, args2) =>
-                {
-                    Image i = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg");
-                    Rectangle m = args2.MarginBounds;
+            //try
+            //{
+            //    //p.Print();
+            //    PrintDocument pd = new PrintDocument();
+            //    //pd.DefaultPageSettings.PrinterSettings.PrinterName = "Printer Name";
+            //    //pd.DefaultPageSettings.Landscape = true; //or false!
+            //    pd.PrintPage += (sender, args2) =>
+            //    {
+            //        Image i = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg");
+            //        Rectangle m = args2.MarginBounds;
 
-                    if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
-                    {
-                        m.Height = (int)((double)i.Height / (double)i.Width * (double)m.Width);
-                    }
-                    else
-                    {
-                        m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
-                    }
-                    args2.Graphics.DrawImage(i, m);
+            //        if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
+            //        {
+            //            m.Height = (int)((double)i.Height / (double)i.Width * (double)m.Width);
+            //        }
+            //        else
+            //        {
+            //            m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
+            //        }
+            //        args2.Graphics.DrawImage(i, m);
 
-                    SolidBrush Brush = new SolidBrush(Color.Black);
+            //        SolidBrush Brush = new SolidBrush(Color.Black);
 
-                    //gets the text from the textbox
-                    string printText = "Alejandro Sierra";
-                    StringFormat sf = new StringFormat();
-                    sf.LineAlignment = StringAlignment.Center;
-                    sf.Alignment = StringAlignment.Center;
-                    printText += Environment.NewLine + System.DateTime.Today.ToShortDateString() + Environment.NewLine + Environment.NewLine 
-                    + "-------------------------------------------------------------------------------------------------" 
-                    + Environment.NewLine;
+            //        //gets the text from the textbox
+            //        string printText = "Alejandro Sierra";
+            //        StringFormat sf = new StringFormat();
+            //        sf.LineAlignment = StringAlignment.Center;
+            //        sf.Alignment = StringAlignment.Center;
+            //        printText += Environment.NewLine + System.DateTime.Today.ToShortDateString() + Environment.NewLine + Environment.NewLine 
+            //        + "-------------------------------------------------------------------------------------------------" 
+            //        + Environment.NewLine;
 
-                    //Makes the file to print and sets the look of it
-                    args2.Graphics.DrawString(printText, new Font("Arial", 9), Brush, 10, 50);
-                
-                };
+            //        //Makes the file to print and sets the look of it
+            //        args2.Graphics.DrawString(printText, new Font("Arial", 9), Brush, 10, 50);
 
-                pd.Print();
+            //    };
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Exception Occured While Printing", ex);
+            //    pd.Print();
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception("Exception Occured While Printing", ex);
+            //}
             }
         }
-    }
 }
 
 /*}
