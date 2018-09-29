@@ -20,7 +20,7 @@ namespace TestPrint
 
         int count = 0;
 
-        int maxChar = 35;
+        int maxChar = 58;
         int maxCharDescription = 20;
 
         int imageHeight = 0;
@@ -109,6 +109,19 @@ namespace TestPrint
             return espacios;
         }
 
+        private string AlignCenterText(int lenght)
+        {
+            int dmax = maxChar / 2;
+            int dlenght = lenght / 2;
+            string espacios = "";
+            int spaces = dmax - dlenght;
+            for (int x = 0; x< spaces; x++)
+            {
+                espacios += " ";
+            }
+            return espacios;
+        }
+
         private string DottedLine()
         {
             string dotted = "";
@@ -166,9 +179,9 @@ namespace TestPrint
             {
                 try
                 {
-                    //gfx.DrawImage(headerImage, new Point((int)leftMargin, (int)YPosition()));
-                    //double height = ((double)headerImage.Height / 58) * 15;
-                    //imageHeight = (int)Math.Round(height) + 3;
+                    gfx.DrawImage(headerImage, new Point((int)leftMargin, (int)YPosition()));
+                    double height = ((double)headerImage.Height / 58) * 15;
+                    imageHeight = (int)Math.Round(height) + 3;
 
                 }
                 catch (Exception)
@@ -185,11 +198,11 @@ namespace TestPrint
                 {
                     int currentChar = 0;
                     int headerLenght = header.Length;
-
+                    
                     while (headerLenght > maxChar)
                     {
                         line = header.Substring(currentChar, maxChar);
-                        gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+                        gfx.DrawString(AlignCenterText(line.Length) + line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
                         count++;
                         currentChar += maxChar;
@@ -254,7 +267,7 @@ namespace TestPrint
         {
             OrderItem ordIt = new OrderItem('?');
 
-            gfx.DrawString("CANT  DESCRIPCION           VALOR", printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+            gfx.DrawString("CANT  DESCRIPCION                          VALOR", printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
             count++;
             DrawEspacio();
@@ -266,7 +279,7 @@ namespace TestPrint
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
                 line = ordIt.GetItemPrice(item);
-                line = AlignRightText(line.Length) + line;
+                line = AlignRightText(line.Length) + "       " +line;
 
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
@@ -317,7 +330,7 @@ namespace TestPrint
             foreach (string total in totales)
             {
                 line = ordTot.GetTotalCantidad(total);
-                line = AlignRightText(line.Length) + line;
+                line = AlignRightText(line.Length) + "       " + line;
 
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
                 leftMargin = 0;

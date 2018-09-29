@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Data;
 using System.Drawing.Printing;
-
+using System.Reflection;
+using System.IO;
 
 namespace TestPrint
 {
@@ -15,7 +16,8 @@ namespace TestPrint
         static void Main(string[] args)
         {
             Ticket ticket = new Ticket();
-
+            //PARA RUTA RELATIVA
+            string strURL = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             ticket.HeaderImage = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg"); //esta propiedad no es obligatoria
 
             ticket.AddHeaderLine("SUPERMERCADO EL DORADO");
@@ -28,22 +30,22 @@ namespace TestPrint
             //de que al final de cada linea agrega una linea punteada "=========="
             ticket.AddSubHeaderLine("Caja # 1 - Factura de Venta No. # 0001");
             ticket.AddSubHeaderLine("Le atendió: Blanca");
-            ticket.AddSubHeaderLine("Fecha: " +DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+            ticket.AddSubHeaderLine("Fecha: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
 
             //El metodo AddItem requeire 3 parametros, el primero es cantidad, el segundo es la descripcion
             //del producto y el tercero es el precio
-            ticket.AddItem("1", "Leche Alqueria", "2.000");
+            ticket.AddItem("1", "Leche Alqueria", "60.000");
             ticket.AddItem("2", "Huevos", "600");
 
             //El metodo AddTotal requiere 2 parametros, la descripcion del total, y el precio
-            ticket.AddTotal("SUBTOTAL", "2600");
-            ticket.AddTotal("IVA", "0");
-            ticket.AddTotal("TOTAL", "2600");
+            //ticket.AddTotal("SUBTOTAL", "2600");
+            //ticket.AddTotal("IVA", "0");
+            ticket.AddTotal("TOTAL", "120.000");
             ticket.AddTotal("", ""); //Ponemos un total en blanco que sirve de espacio
-            ticket.AddTotal("EFECTIVO", "5.000");
-            ticket.AddTotal("CAMBIO", "2.400");
+            //ticket.AddTotal("EFECTIVO", "5.000");
+            //ticket.AddTotal("CAMBIO", "2.400");
             ticket.AddTotal("", "");// Ponemos un total en blanco que sirve de espacio
-            ticket.AddTotal("USTED AHORRO", "0.00");
+            //ticket.AddTotal("USTED AHORRO", "0.00");
 
             //El metodo AddFooterLine funciona igual que la cabecera
             ticket.AddFooterLine("Gracias, Thanks, Danke, Grazie,");
@@ -63,51 +65,51 @@ namespace TestPrint
             //{
             //    e1.Graphics.DrawString(s, new Font("Times New Roman", 12), new SolidBrush(Color.Black), new RectangleF(0, 0, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
             //};
-            //try
-            //{
-            //    //p.Print();
-            //    PrintDocument pd = new PrintDocument();
-            //    //pd.DefaultPageSettings.PrinterSettings.PrinterName = "Printer Name";
-            //    //pd.DefaultPageSettings.Landscape = true; //or false!
-            //    pd.PrintPage += (sender, args2) =>
-            //    {
-            //        Image i = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg");
-            //        Rectangle m = args2.MarginBounds;
+        //    try
+        //    {
+        //        //p.Print();
+        //        PrintDocument pd = new PrintDocument();
+        //        //pd.DefaultPageSettings.PrinterSettings.PrinterName = "Printer Name";
+        //        //pd.DefaultPageSettings.Landscape = true; //or false!
+        //        pd.PrintPage += (sender, args2) =>
+        //        {
+        //            Image i = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg");
+        //            Rectangle m = args2.MarginBounds;
 
-            //        if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
-            //        {
-            //            m.Height = (int)((double)i.Height / (double)i.Width * (double)m.Width);
-            //        }
-            //        else
-            //        {
-            //            m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
-            //        }
-            //        args2.Graphics.DrawImage(i, m);
+        //            if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
+        //            {
+        //                m.Height = (int)((double)i.Height / (double)i.Width * (double)m.Width);
+        //            }
+        //            else
+        //            {
+        //                m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
+        //            }
+        //            args2.Graphics.DrawImage(i, m);
 
-            //        SolidBrush Brush = new SolidBrush(Color.Black);
+        //            SolidBrush Brush = new SolidBrush(Color.Black);
 
-            //        //gets the text from the textbox
-            //        string printText = "Alejandro Sierra";
-            //        StringFormat sf = new StringFormat();
-            //        sf.LineAlignment = StringAlignment.Center;
-            //        sf.Alignment = StringAlignment.Center;
-            //        printText += Environment.NewLine + System.DateTime.Today.ToShortDateString() + Environment.NewLine + Environment.NewLine 
-            //        + "-------------------------------------------------------------------------------------------------" 
-            //        + Environment.NewLine;
+        //            //gets the text from the textbox
+        //            string printText = "Alejandro Sierra";
+        //            StringFormat sf = new StringFormat();
+        //            sf.LineAlignment = StringAlignment.Center;
+        //            sf.Alignment = StringAlignment.Center;
+        //            printText += Environment.NewLine + System.DateTime.Today.ToShortDateString() + Environment.NewLine + Environment.NewLine
+        //            + "-------------------------------------------------------------------------------------------------"
+        //            + Environment.NewLine;
 
-            //        //Makes the file to print and sets the look of it
-            //        args2.Graphics.DrawString(printText, new Font("Arial", 9), Brush, 10, 50);
+        //            //Makes the file to print and sets the look of it
+        //            args2.Graphics.DrawString(printText, new Font("Arial", 9), Brush, 10, 50);
 
-            //    };
+        //        };
 
-            //    pd.Print();
+        //        pd.Print();
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("Exception Occured While Printing", ex);
-            //}
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Exception Occured While Printing", ex);
+        //    }
+        }
         }
 }
 
