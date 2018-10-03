@@ -20,13 +20,14 @@ namespace TestPrint
 
         int count = 0;
 
-        int maxChar = 58;
-        int maxCharDescription = 20;
+        int maxChar = 46;
+        int maxCharDescription = 26;
 
         int imageHeight = 0;
 
+        float leftImageMargin = 26;
         float leftMargin = 0;
-        float topMargin = 3;
+        float topMargin = 0;
 
         string fontName = "Arial";
         int fontSize = 9;
@@ -83,10 +84,10 @@ namespace TestPrint
             subHeaderLines.Add(line);
         }
 
-        public void AddItem(string cantidad, string item, string price)
+        public void AddItem(string cantidad, string item, string singlePrice,  string cost)
         {
             OrderItem newItem = new OrderItem('?');
-            items.Add(newItem.GenerateItem(cantidad, item, price));
+            items.Add(newItem.GenerateItem(cantidad, item, singlePrice, cost));
         }
 
         public void AddTotal(string name, string price)
@@ -179,10 +180,9 @@ namespace TestPrint
             {
                 try
                 {
-                    gfx.DrawImage(headerImage, new Point((int)leftMargin, (int)YPosition()));
+                    gfx.DrawImage(headerImage, new Point((int)leftImageMargin, (int)YPosition()));
                     double height = ((double)headerImage.Height / 58) * 15;
                     imageHeight = (int)Math.Round(height) + 3;
-
                 }
                 catch (Exception)
                 {
@@ -215,8 +215,8 @@ namespace TestPrint
                 else
                 {
                     line = header;
-                    gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-
+                    gfx.DrawString(AlignCenterText(line.Length) + line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+                    
                     count++;
                 }
             }
@@ -266,8 +266,7 @@ namespace TestPrint
         private void DrawItems()
         {
             OrderItem ordIt = new OrderItem('?');
-
-            gfx.DrawString("CANT  DESCRIPCION                          VALOR", printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+            gfx.DrawString("QTY DESCRIPCION                      UND       VALOR  ", printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
             count++;
             DrawEspacio();
@@ -279,7 +278,12 @@ namespace TestPrint
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
                 line = ordIt.GetItemPrice(item);
-                line = AlignRightText(line.Length) + "       " +line;
+                line = AlignRightText(line.Length) + "             " + line;
+
+                gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+
+                line = ordIt.GetItemCost(item);
+                line = AlignRightText(line.Length) + "                           " + line;
 
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
@@ -294,7 +298,8 @@ namespace TestPrint
                     while (itemLenght > maxCharDescription)
                     {
                         line = ordIt.GetItemName(item);
-                        gfx.DrawString("      " + line.Substring(currentChar, maxCharDescription), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+                        var subString = line.Substring(currentChar, maxCharDescription);
+                        gfx.DrawString("   " + subString, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
                         count++;
                         currentChar += maxCharDescription;
@@ -302,13 +307,13 @@ namespace TestPrint
                     }
 
                     line = ordIt.GetItemName(item);
-                    gfx.DrawString("      " + line.Substring(currentChar, line.Length - currentChar), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
+                    var subString2 = line.Substring(currentChar, line.Length - currentChar);
+                    gfx.DrawString("   " + subString2, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
                     count++;
                 }
                 else
                 {
-                    gfx.DrawString("      " + ordIt.GetItemName(item), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-
+                    gfx.DrawString("   " + ordIt.GetItemName(item), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
                     count++;
                 }
             }
@@ -330,12 +335,12 @@ namespace TestPrint
             foreach (string total in totales)
             {
                 line = ordTot.GetTotalCantidad(total);
-                line = AlignRightText(line.Length) + "       " + line;
+                line = AlignRightText(line.Length) + "                         " + line;
 
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
                 leftMargin = 0;
 
-                line = "      " + ordTot.GetTotalName(total);
+                line = "                                  " + ordTot.GetTotalName(total);
                 gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
                 count++;
             }
@@ -415,9 +420,15 @@ namespace TestPrint
             return delimitado[2];
         }
 
-        public string GenerateItem(string cantidad, string itemName, string price)
+        public string GetItemCost(string orderItem)
         {
-            return cantidad + delimitador[0] + itemName + delimitador[0] + price;
+            string[] delimitado = orderItem.Split(delimitador);
+            return delimitado[3];
+        }
+
+        public string GenerateItem(string cantidad, string itemName, string singlePrince, string cost)
+        {
+            return cantidad + delimitador[0] + itemName + delimitador[0] + singlePrince + delimitador[0] + cost;
         }
     }
 
