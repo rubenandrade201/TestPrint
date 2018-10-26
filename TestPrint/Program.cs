@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +18,8 @@ namespace TestPrint
             Ticket ticket = new Ticket();
             //PARA RUTA RELATIVA
             string strURL = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            ticket.HeaderImage = Image.FromFile(@"C:\Users\Ruben\Desktop\logo.png"); //esta propiedad no es obligatoria            
+            //ticket.HeaderImage = Image.FromFile(@"C:\Users\Ruben\Desktop\logo.png"); //esta propiedad no es obligatoria            
+            ticket.HeaderImage = Image.FromFile(@"C:\Users\gusvo\Documents\repositories\TestPrint\TestPrint\descarga.jpg");
             ticket.AddHeaderLine("SUPERMERCADO EL DORADO");            
             ticket.AddHeaderLine("Afidro Agrupación 2");
             ticket.AddHeaderLine("CRA 90 BIS # 76 - 51 INT 30 LOCAL 102");
@@ -46,7 +47,8 @@ namespace TestPrint
 
             //Y por ultimo llamamos al metodo PrintTicket para imprimir el ticket, este metodo necesita un
             //parametro de tipo string que debe de ser el nombre de la impresora.
-            ticket.PrintTicket("GP-80160N(Cut) Series");
+            //ticket.PrintTicket("GP-80160N(Cut) Series");
+            ticket.PrintTicket("ONE 500");
 
         }
     }

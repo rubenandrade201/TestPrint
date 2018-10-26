@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -123,6 +123,18 @@ namespace TestPrint
             return espacios;
         }
 
+        private string AlignCenterHeaderText(int lenght)
+        {
+            decimal spaces = maxChar - lenght;
+            string espacios = "";
+            spaces = Math.Ceiling((spaces/2)) ;
+            for (int x = 0; x < spaces; x++)
+            {
+                espacios += " ";
+            }
+            return espacios;
+        }
+
         private string DottedLine()
         {
             string dotted = "";
@@ -181,7 +193,7 @@ namespace TestPrint
                 try
                 {
                     gfx.DrawImage(headerImage, new Point((int)leftImageMargin, (int)YPosition()));
-                    double height = ((double)headerImage.Height / 58) * 15;
+                    double height = ((double)headerImage.Height / 46) * 15;
                     imageHeight = (int)Math.Round(height) + 3;
                 }
                 catch (Exception)
