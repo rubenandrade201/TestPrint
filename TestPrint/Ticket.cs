@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -196,41 +196,38 @@ namespace TestPrint
                     double height = ((double)headerImage.Height / 46) * 15;
                     imageHeight = (int)Math.Round(height) + 3;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine("{0} Exception caught.", e);
                 }
             }
         }
 
         private void DrawHeader()
         {
+            float lineheight14 = printFont.GetHeight(gfx);
+            StringFormat formatCenter = new StringFormat(StringFormatFlags.NoClip);
+            formatCenter.Alignment = StringAlignment.Center;
+            float Offset = 0;
+            SizeF layoutSize = new SizeF(70 - Offset * 2, lineheight14);
+            RectangleF layout = new RectangleF(new PointF(0, 3 + Offset), layoutSize);
             foreach (string header in headerLines)
             {
-                if (header.Length > maxChar)
-                {
-                    int currentChar = 0;
-                    int headerLenght = header.Length;
-                    
-                    while (headerLenght > maxChar)
-                    {
-                        line = header.Substring(currentChar, maxChar);
-                        gfx.DrawString(AlignCenterText(line.Length) + line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
 
-                        count++;
-                        currentChar += maxChar;
-                        headerLenght -= maxChar;
-                    }
-                    line = header;
-                    gfx.DrawString(line.Substring(currentChar, line.Length - currentChar), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-                    count++;
+                line = header;
+                gfx.DrawString(line, printFont, myBrush, layout, formatCenter);
+                if(count == 0)
+                {
+                    Offset += 4 + printFont.GetHeight(gfx);
                 }
                 else
                 {
-                    line = header;
-                    gfx.DrawString(AlignCenterText(line.Length) + line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-                    
-                    count++;
+                    Offset += count * printFont.GetHeight(gfx);
                 }
+                layout = new RectangleF(new PointF(0, 2 + Offset), layoutSize);
+
+                count++;
+                
             }
             DrawEspacio();
         }
@@ -363,33 +360,29 @@ namespace TestPrint
 
         private void DrawFooter()
         {
+            float lineheight14 = printFont.GetHeight(gfx);
+            StringFormat formatCenter = new StringFormat(StringFormatFlags.NoClip);
+            formatCenter.Alignment = StringAlignment.Center;
+            float Offset = 0;
+            SizeF layoutSize = new SizeF(70 - Offset * 2, lineheight14);
+            RectangleF layout = new RectangleF(new PointF(0, 4 + YPosition()), layoutSize);
+
             foreach (string footer in footerLines)
             {
-                if (footer.Length > maxChar)
+                line = footer;
+                gfx.DrawString(line, printFont, myBrush, layout, formatCenter);
+                if(count == 0)
                 {
-                    int currentChar = 0;
-                    int footerLenght = footer.Length;
-
-                    while (footerLenght > maxChar)
-                    {
-                        line = footer;
-                        gfx.DrawString(line.Substring(currentChar, maxChar), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-
-                        count++;
-                        currentChar += maxChar;
-                        footerLenght -= maxChar;
-                    }
-                    line = footer;
-                    gfx.DrawString(line.Substring(currentChar, line.Length - currentChar), printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-                    count++;
+                    Offset += 4 + printFont.GetHeight(gfx);
                 }
                 else
                 {
-                    line = footer;
-                    gfx.DrawString(line, printFont, myBrush, leftMargin, YPosition(), new StringFormat());
-
-                    count++;
+                    Offset += 4 + printFont.GetHeight(gfx) + YPosition();
                 }
+                layout = new RectangleF(new PointF(0, 4 + Offset), layoutSize);
+
+                count++;
+
             }
             leftMargin = 0;
             DrawEspacio();
