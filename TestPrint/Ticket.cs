@@ -193,7 +193,7 @@ namespace TestPrint
                 try
                 {
                     gfx.DrawImage(headerImage, new Point((int)leftImageMargin, (int)YPosition()));
-                    double height = ((double)headerImage.Height / 46) * 15;
+                    double height = ((double)headerImage.Height / 58) * 15;
                     imageHeight = (int)Math.Round(height) + 3;
                 }
                 catch (Exception e)
@@ -210,24 +210,22 @@ namespace TestPrint
             formatCenter.Alignment = StringAlignment.Center;
             float Offset = 0;
             SizeF layoutSize = new SizeF(70 - Offset * 2, lineheight14);
-            RectangleF layout = new RectangleF(new PointF(0, 3 + Offset), layoutSize);
+            RectangleF layout = new RectangleF(new PointF(0, YPosition()), layoutSize);
             foreach (string header in headerLines)
             {
 
                 line = header;
                 gfx.DrawString(line, printFont, myBrush, layout, formatCenter);
-                if(count == 0)
+                count++;
+                if (count == 0)
                 {
-                    Offset += 4 + printFont.GetHeight(gfx);
+                    Offset += 5 + printFont.GetHeight(gfx);
                 }
                 else
                 {
                     Offset += count * printFont.GetHeight(gfx);
                 }
-                layout = new RectangleF(new PointF(0, 2 + Offset), layoutSize);
-
-                count++;
-                
+                layout = new RectangleF(new PointF(0, YPosition()), layoutSize);
             }
             DrawEspacio();
         }
